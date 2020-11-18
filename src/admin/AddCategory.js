@@ -2,13 +2,34 @@ import React, { useState } from "react";
 import Base from "../core/Base";
 import { isAutheticated } from "../auth/helper";
 import { Link } from "react-router-dom";
+import { createCategory } from "./helper/adminapicall";
 
 const AddCategory = () => {
-  const [name, setName] = useState("initialState");
+  const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const { user, token } = isAutheticated();
+
+  const handleChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    setError(false);
+    createCategory(user._id, token, { name })
+      .then((data) => {
+        if (data.error) {
+          setError(true);
+        } else {
+          setSuccess(true);
+          setError(false);
+          setName("");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   const goBack = () => (
     <div className="mt-5">
@@ -17,6 +38,19 @@ const AddCategory = () => {
       </Link>
     </div>
   );
+
+  const errorMessage = () => {
+    if (error)
+      return (
+        <h4 className="text-warning success">Failed to create category</h4>
+      );
+  };
+
+  const successMessage = () => {
+    if (success) {
+      return <h4 className="text-success"> category succcessfully created </h4>;
+    }
+  };
 
   const myCategoryForm = () => (
     <form>
@@ -27,9 +61,13 @@ const AddCategory = () => {
           className="form-control my-3"
           autoFocus
           required
+          value={name}
+          onChange={handleChange}
           placeholder="For Ex. Summer"
         />
-        <button className="btn btn-outline-info">Create Category</button>
+        <button onClick={onSubmit} className="btn btn-outline-info">
+          Create Category
+        </button>
       </div>
     </form>
   );
@@ -42,6 +80,8 @@ const AddCategory = () => {
     >
       <div className="row bg-white rounded">
         <div className="col-md-8 offset-md-2">
+          {errorMessage()}
+          {successMessage()}
           {myCategoryForm()}
           {goBack()}
         </div>
