@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const AdminDashBoard = () => {
   const {
-    user: { name, email, role }
+    user: { name, email, role },
   } = isAutheticated();
 
   const adminLeftSide = () => {
@@ -24,7 +24,7 @@ const AdminDashBoard = () => {
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/admin/create/product" className="nav-link text-success">
+            <Link to="/admin/product/create" className="nav-link text-success">
               Create Product
             </Link>
           </li>

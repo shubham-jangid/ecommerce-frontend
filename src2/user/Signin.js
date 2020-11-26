@@ -1,42 +1,39 @@
 import React, { useState } from "react";
 import Base from "../core/Base";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import { signin, authenticate, isAutheticated } from "../auth/helper";
 
-const Signin = () => {
+const SignIn = () => {
   const [values, setValues] = useState({
-    email: "example@example.com",
+    email: "shubhamjangid70@gmail.com",
     password: "12345",
     error: "",
     loading: false,
-    didRedirect: false
+    didRedirect: false,
   });
 
   const { email, password, error, loading, didRedirect } = values;
   const { user } = isAutheticated();
 
-  const handleChange = name => event => {
+  const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
-  const onSubmit = event => {
+  const onsubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, error: false, loading: true });
     signin({ email, password })
-      .then(data => {
+      .then((data) => {
         if (data.error) {
           setValues({ ...values, error: data.error, loading: false });
         } else {
           authenticate(data, () => {
-            setValues({
-              ...values,
-              didRedirect: true
-            });
+            setValues({ ...values, didRedirect: true });
           });
         }
       })
-      .catch(console.log("signin request failed"));
+      .catch(console.log("Signin  request failed"));
   };
 
   const performRedirect = () => {
@@ -56,7 +53,7 @@ const Signin = () => {
     return (
       loading && (
         <div className="alert alert-info">
-          <h2>Loading...</h2>
+          <h2>Loading... </h2>
         </div>
       )
     );
@@ -83,17 +80,17 @@ const Signin = () => {
         <div className="col-md-6 offset-sm-3 text-left">
           <form>
             <div className="form-group">
-              <label className="text-light">Email</label>
+              <label className="text-dark">Email</label>
               <input
                 onChange={handleChange("email")}
-                value={email}
                 className="form-control"
+                value={email}
                 type="email"
               />
             </div>
 
             <div className="form-group">
-              <label className="text-light">Password</label>
+              <label className="text-dark">Password</label>
               <input
                 onChange={handleChange("password")}
                 value={password}
@@ -101,25 +98,25 @@ const Signin = () => {
                 type="password"
               />
             </div>
-            <button onClick={onSubmit} className="btn btn-success btn-block">
+            <button onClick={onsubmit} className="btn btn-success btn-block">
               Submit
             </button>
           </form>
+          {`email: ${email}  password: ${password}`}
         </div>
       </div>
     );
   };
 
   return (
-    <Base title="Sign In page" description="A page for user to sign in!">
+    <Base title="Sign In page" description="Please signin to proceed">
       {loadingMessage()}
       {errorMessage()}
       {signInForm()}
       {performRedirect()}
-
       <p className="text-white text-center">{JSON.stringify(values)}</p>
     </Base>
   );
 };
 
-export default Signin;
+export default SignIn;

@@ -1,6 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { signout, isAutheticated } from "../auth/helper";
+
+import { signout, isAutheticated } from "../auth/helper/";
 
 const currentTab = (history, path) => {
   if (history.location.pathname === path) {
@@ -12,7 +13,7 @@ const currentTab = (history, path) => {
 
 const Menu = ({ history }) => (
   <div>
-    <ul className="nav nav-tabs bg-dark">
+    <ul className="nav nav-tabs bg-secondary">
       <li className="nav-item">
         <Link style={currentTab(history, "/")} className="nav-link" to="/">
           Home
@@ -27,7 +28,7 @@ const Menu = ({ history }) => (
           Cart
         </Link>
       </li>
-      {isAutheticated() && isAutheticated().user.role === 0 && (
+      {isAutheticated() && (
         <li className="nav-item">
           <Link
             style={currentTab(history, "/user/dashboard")}
@@ -38,6 +39,7 @@ const Menu = ({ history }) => (
           </Link>
         </li>
       )}
+
       {isAutheticated() && isAutheticated().user.role === 1 && (
         <li className="nav-item">
           <Link
@@ -49,8 +51,9 @@ const Menu = ({ history }) => (
           </Link>
         </li>
       )}
+
       {!isAutheticated() && (
-        <Fragment>
+        <>
           <li className="nav-item">
             <Link
               style={currentTab(history, "/signup")}
@@ -69,8 +72,9 @@ const Menu = ({ history }) => (
               Sign In
             </Link>
           </li>
-        </Fragment>
+        </>
       )}
+
       {isAutheticated() && (
         <li className="nav-item">
           <span
